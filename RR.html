@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rr Music Player</title>
+    <style>
+        /* CSS styling for the music player interface */
+        @keyframes glow {
+    from {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+        body { margin: 0; padding: 0; font-family: 'Arial', sans-serif; background-color: #1e1e1e; color: #ddd; }
+        .container { max-width: 600px; margin: 50px auto; background-color: #2e2e2e; border-radius: 10px; padding: 20px; position: relative; }
+        .container::before { content: ''; position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px; border-radius: 20px; border: 2px solid #800080; box-shadow: 0 0 20px rgba(128, 0, 128, 0.7); pointer-events: none; z-index: -1; }
+        .header { text-align: center; color: #FFD700; }
+        h1 { color: #FFA500; }
+        .controls { text-align: center; margin-top: 20px; }
+        button { background-color: #4CAF50; color: #ddd; border: none; border-radius: 50%; padding: 20px; margin: 5px; cursor: pointer; font-size: 24px; }
+        button:hover { background-color: #6b8e23; }
+        input[type="range"] { width: 80%; margin: 0 10%; background-color: #ccc; color: #ddd; border: none; }
+        .visualization { text-align: center; background-color: #000; overflow: hidden; position: relative; }
+        #visualizer { width: 100%; height: 150px; background-color: #000; display: flex; align-items: flex-end; }
+        #visualizer div { flex: 1; height: 100%; margin: 0 1px; background-color: #333; }
+        .fit-options { position: absolute; top: 10px; right: 10px; z-index: 1; }
+        .fit-options button { background-color: #4CAF50; color: #ddd; border: none; border-radius: 5px; padding: 10px; margin: 5px; cursor: pointer; }
+        .fit-options button:hover { background-color: #6b8e23; }
+        #song-name-container { color: #FFD700; margin-top: 20px; }
+        #song-list { display: flex; flex-wrap: wrap; justify-content: center; list-style: none; padding: 0; margin-top: 20px; }
+        .song-block { width: 150px; height: 150px; margin: 10px; background-color: #2e2e2e; border-radius: 10px; position: relative; overflow: hidden; }
+        .song-block img { width: 100%; height: 100%; object-fit: cover; }
+        .song-block:hover { filter: brightness(90%); }
+        .song-block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.5)); pointer-events: none; }
+        .song-heading { position: absolute; bottom: 10px; left: 10px; color: #FFA500; }
+        .song-title { font-size: 16px; font-weight: bold; }
+        .song-artist { font-size: 14px; }
+    </style>
+</head>
+<body>
+    <!-- Fit options for adjusting container width -->
+    <div class="fit-options">
+        <button id="fit-tight-btn">Fit Tight</button>
+        <button id="fit-wide-btn">Fit Wide</button>
+    </div>
+
+    <!-- Music player interface container -->
+    <div class="container">
+        <!-- Header section with the player title -->
+        <div class="header">
+            <h1>Rr Music Player</h1>
+            <!-- Display currently playing song name -->
+            <div id="song-name-container">
+                <p id="song-name">No file chosen</p>
+            </div>
+        </div>
+        <!-- Control buttons for play/pause, previous, next, volume, and time -->
+        <div class="controls">
+            <button id="prev">&lt;</button>
+            <button id="play-pause">&#9654;</button>
+            <button id="next">&gt;</button>
+            <input type="range" id="volume" min="0" max="100" step="1">
+            <span id="current-time">00:00</span> / <span id="duration">00:00</span>
+        </div>
+        <!-- Visualization section for displaying audio visualizer -->
+        <div class="visualization" id="visualizer"></div>
+        <!-- Audio element for playing audio -->
+        <audio id="audio"></audio>
+    </div>
+
+    <ul id="song-list">
+        <li class="song-block" data-src="https://raw.githubusercontent.com/Raufjatoi/Mini-clyde/main/tomp3.cc%20-%20Post%20Malone%20%20Mourning%20Official%20Music%20Video_320kbps.mp3">
+            <img src="https://github.com/Raufjatoi/Mini-clyde/blob/main/e2.jpg" alt="Mourning">
+            <div class="song-heading">
+                <p class="song-title">Mourning</p>
+                <p class="song-artist">Post Malone</p>
+            </div>
+        </li>
+        <li class="song-block" data-src="https://raw.githubusercontent.com/Raufjatoi/Mini-clyde/main/tomp3.cc%20-%20Ed%20Sheeran%20%20Eyes%20Closed%20Official%20Lyric%20Video_320kbps.mp3">
+            <img src="https://github.com/Raufjatoi/Mini-clyde/blob/main/e1.png" alt="Eyes Closed">
+            <div class="song-heading">
+                <p class="song-title">Eyes Closed</p>
+                <p class="song-artist">Ed Sheeran</p>
+            </div>
+        </li>
+        <li class="song-block" data-src="https://raw.githubusercontent.com/Raufjatoi/Mini-clyde/main/tomp3.cc%20-%20The%20Weeknd%20%20Blinding%20Lights%20Official%20Audio_320kbps.mp3">
+            <img src="https://github.com/Raufjatoi/Mini-clyde/blob/main/e3.jpg" alt="Blinding Lights">
+            <div class="song-heading">
+                <p class="song-title">Blinding Lights</p>
+                <p class="song-artist">The Weeknd</p>
+            </div>
+        </li>
+        <li class="song-block" data-src="https://raw.githubusercontent.com/Raufjatoi/Mini-clyde/main/tomp3.cc%20-%20Ed%20Sheeran%20%20Shape%20Of%20You%20Audio_320kbps.mp3">
+            <img src="https://github.com/Raufjatoi/Mini-clyde/blob/main/Shape_Of_You_(Official_Single_Cover)_by_Ed_Sheeran.png" alt="Shape Of You">
+            <div class="song-heading">
+                <p class="song-title">Shape Of You</p>
+                <p class="song-artist">Ed Sheeran</p>
+            </div>
+        </li>
+        <li class="song-block" data-src="https://raw.githubusercontent.com/Raufjatoi/Mini-clyde/main/tomp3.cc%20-%20The%20Weeknd%20%20Blinding%20Lights%20Official%20Audio_320kbps.mp3">
+            <img src="https://github.com/Raufjatoi/Mini-clyde/blob/main/e3.jpg" alt="Blinding Lights 2">
+            <div class="song-heading">
+                <p class="song-title">Blinding Lights (2)</p>
+                <p class="song-artist">The Weeknd</p>
+            </div>
+        </li>
+    </ul>
+    
+    
+    <!-- JavaScript code -->
+    <script>
+let audioCtx, analyser, dataArray, bufferLength;
+let songs = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('fit-tight-btn').addEventListener('click', fitTight);
+    document.getElementById('fit-wide-btn').addEventListener('click', fitWide);
+    document.getElementById('prev').addEventListener('click', playPrev);
+    document.getElementById('play-pause').addEventListener('click', togglePlayPause);
+    document.getElementById('next').addEventListener('click', playNext);
+    document.querySelectorAll('.song-block').forEach(song => {
+        song.addEventListener('click', () => playSong(song.dataset.src));
+    });
+    // Add this function inside the DOMContentLoaded event listener
+document.getElementById('audio').addEventListener('timeupdate', updateTime);
+
+// Define the updateTime function
+function updateTime() {
+    const audio = document.getElementById('audio');
+    const currentTime = formatTime(audio.currentTime);
+    const duration = formatTime(audio.duration);
+    document.getElementById('current-time').textContent = currentTime;
+    document.getElementById('duration').textContent = duration;
+}
+
+// Define the formatTime function
+function formatTime(time) {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    return formattedTime;
+}
+
+    initAudio();
+    setInterval(drawVisualizer, 1000); // Draw visualizer randomly every second
+});
+
+async function initAudio() {
+    const githubUrls = [
+        'https://raw.githubusercontent.com/Raufjatoi/Mini-clyde/main/tomp3.cc%20-%20Post%20Malone%20%20Mourning%20Official%20Music%20Video_320kbps.mp3',
+        'https://raw.githubusercontent.com/Raufjatoi/Mini-clyde/main/tomp3.cc%20-%20Ed%20Sheeran%20%20Eyes%20Closed%20Official%20Lyric%20Video_320kbps.mp3',
+        'https://raw.githubusercontent.com/Raufjatoi/Mini-clyde/main/tomp3.cc%20-%20The%20Weeknd%20%20Blinding%20Lights%20Official%20Audio_320kbps.mp3',
+        'https://raw.githubusercontent.com/Raufjatoi/Mini-clyde/main/tomp3.cc%20-%20Ed%20Sheeran%20%20Shape%20Of%20You%20Audio_320kbps.mp3',
+        'https://raw.githubusercontent.com/Raufjatoi/Mini-clyde/main/tomp3.cc%20-%20The%20Weeknd%20%20Blinding%20Lights%20Official%20Audio_320kbps.mp3'
+    ];
+    songs = githubUrls;
+    updateSongList();
+}
+
+function updateSongList() {
+    const songList = document.getElementById('song-list');
+    songList.innerHTML = '';
+    songs.forEach((src, index) => {
+        const li = document.createElement('li');
+        li.className = 'song-block';
+        li.dataset.src = src;
+        li.innerHTML = `
+            <img src="https://via.placeholder.com/150" alt="Song ${index + 1}">
+            <div class="song-heading">
+                <p class="song-title">${getSongTitle(src)}</p>
+                <p class="song-artist">${getSongArtist(src)}</p>
+            </div>
+        `;
+        songList.appendChild(li);
+    });
+}
+
+function getSongTitle(src) {
+    // Extract title from URL or use a default value
+    const parts = src.split('/');
+    const fileName = parts[parts.length - 1];
+    const title = fileName.split('%20').slice(1).join(' ').replace('.mp3', '');
+    return title || 'Unknown Title';
+}
+
+function getSongArtist(src) {
+    // Extract artist from URL or use a default value
+    const parts = src.split('/');
+    const fileName = parts[parts.length - 1];
+    const artist = fileName.split('%20')[2].replace('%20Official', '').replace('_320kbps.mp3', '');
+    return artist || 'Unknown Artist';
+}
+
+function fitTight() {
+    document.querySelector('.container').style.maxWidth = '600px';
+}
+
+function fitWide() {
+    document.querySelector('.container').style.maxWidth = '1000px';
+}
+
+function playPrev() {
+    const audio = document.getElementById('audio');
+    const currentIndex = songs.findIndex(song => song === audio.src);
+    if (currentIndex > 0) {
+        const prevSongSrc = songs[currentIndex - 1];
+        playSong(prevSongSrc);
+    } else {
+        // If at the beginning of the playlist, loop to the last song
+        const lastSongSrc = songs[songs.length - 1];
+        playSong(lastSongSrc);
+    }
+}
+
+function playNext() {
+    const audio = document.getElementById('audio');
+    const currentIndex = songs.findIndex(song => song === audio.src);
+    if (currentIndex < songs.length - 1) {
+        const nextSongSrc = songs[currentIndex + 1];
+        playSong(nextSongSrc);
+    } else {
+        // If at the end of the playlist, loop to the first song
+        const firstSongSrc = songs[0];
+        playSong(firstSongSrc);
+    }
+}
+
+function togglePlayPause() {
+    const audio = document.getElementById('audio');
+    if (audio.paused) {
+        audio.play();
+        document.getElementById('play-pause').textContent = '❚❚';
+    } else {
+        audio.pause();
+        document.getElementById('play-pause').textContent = '&#9654;';
+    }
+}
+
+function playSong(src) {
+    const audio = document.getElementById('audio');
+    audio.src = src;
+    audio.play();
+    const title = getSongTitle(src);
+    const artist = getSongArtist(src);
+    document.getElementById('song-name').textContent = `${title} - ${artist}`;
+}
+
+function drawVisualizer() {
+    const visualizer = document.getElementById('visualizer');
+    visualizer.innerHTML = '';
+
+    const numBars = Math.floor(visualizer.clientWidth / 15); // Adjust number of bars based on container width
+
+    const colors = ['#FFD700', '#FF0000', '#0000FF']; // Yellow, Red, Blue
+    let colorIndex = 0;
+
+    for (let i = 0; i < numBars; i++) {
+        const barHeight = Math.random() * 150; // Random height between 0 and 150px
+        const bar = document.createElement('div');
+        bar.style.height = barHeight + 'px';
+        bar.style.backgroundColor = colors[colorIndex];
+        bar.style.boxShadow = `0 0 10px ${colors[colorIndex]}, 0 0 20px ${colors[colorIndex]}, 0 0 30px ${colors[colorIndex]}`;
+        bar.style.animation = `glow 1s infinite alternate`;
+        bar.style.animationDelay = `${i * 0.05}s`; // Delay animation for each bar
+        visualizer.appendChild(bar);
+
+        // Change color index for next bar
+        colorIndex = (colorIndex + 1) % colors.length;
+    }
+}
+
+
+    </script>
+
+</body>
+</html>
