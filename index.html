@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ofline Music Player 🎵</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #3a0047; /* Dark purple background */
+        color: #fff;
+        margin: 0;
+        padding: 0;
+    }
+    #github-logo img {
+    width: 100px;
+    height: 100px;
+}
+
+    #container {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 20px;
+    }
+    #left-corner {
+    width: 100px;
+    height: 100px;
+    /* Remove background color */
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#left-corner img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 50%;
+    /* Add box shadow for a shaded effect */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+  #player {
+    flex: 1;
+    padding: 40px 20px 20px 20px; /* Adjusted padding */
+    border: 2px solid #4caf50; /* Green */
+    border-radius: 10px;
+}
+
+    #right-corner {
+        position: relative;
+    }
+    #right-corner input[type="file"] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        opacity: 0;
+    }
+    #right-corner label {
+        background-color: #4caf50; /* Green */
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    #right-corner label:hover {
+        background-color: #45a049; /* Darker green */
+    }
+    #github-logo {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+<div id="container">
+    <div id="left-corner">
+        <p>Abdul Rauf</p>
+        <!-- You can replace the image URL below with your own image -->
+        <img src="IMG_0406.JPG" alt="Abdul Rauf's Picture">
+    </div>
+    <div id="player">
+        <h1>Ofline Music Player 🎵</h1>
+        <audio id="audioPlayer" controls></audio>
+        <button id="playBtn">Play</button>
+        <button id="pauseBtn">Pause</button>
+        <input type="range" id="volumeRange" min="0" max="1" step="0.01" value="1">
+    </div>
+    <div id="right-corner">
+        <input type="file" id="fileInput" accept="audio/*">
+        <label for="fileInput">Choose Music</label>
+    </div>
+</div>
+
+<!-- You can replace the image URL below with your own GitHub logo -->
+<a href="https://github.com/your_username" target="_blank" id="github-logo">
+    <img src="github.png" alt="GitHub Logo">
+</a>
+
+
+<script>
+    const audioPlayer = document.getElementById('audioPlayer');
+    const playBtn = document.getElementById('playBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const volumeRange = document.getElementById('volumeRange');
+    const fileInput = document.getElementById('fileInput');
+
+    playBtn.addEventListener('click', () => {
+        audioPlayer.play();
+    });
+
+    pauseBtn.addEventListener('click', () => {
+        audioPlayer.pause();
+    });
+
+    volumeRange.addEventListener('input', () => {
+        audioPlayer.volume = volumeRange.value;
+    });
+
+    fileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        const url = URL.createObjectURL(file);
+        audioPlayer.src = url;
+    });
+</script>
+</body>
+</html>
