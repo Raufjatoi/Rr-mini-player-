@@ -12,121 +12,217 @@
         margin: 0;
         padding: 0;
     }
-    #github-logo img {
-    width: 75px;
-    height: 75px;
-}
+
+    #github-button {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999; /* Ensure it's above other content */
+        background-color: #1db954; /* Green similar to Spotify */
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    #github-button:hover {
+        background-color: #1ed760; /* Darker green */
+    }
 
     #container {
         position: relative;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
         padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
     }
+
     #left-corner {
-    width: 100px;
-    height: 100px;
-    /* Remove background color */
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
 
-#left-corner img {
-    max-width: 100%;
-    max-height: 100%;
-    border-radius: 50%;
-    /* Add box shadow for a shaded effect */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
+    #left-corner img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
 
-  #player {
-    flex: 1;
-    padding: 40px 20px 20px 20px; /* Adjusted padding */
-    border: 2px solid #4caf50; /* Green */
-    border-radius: 10px;
-}
+    #player {
+        padding: 20px;
+        border-radius: 10px;
+        background-color: #191414; /* Dark background similar to Spotify */
+        margin-bottom: 20px;
+    }
 
-    #right-corner {
+    h1 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    audio {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    button {
+        background-color: #1db954; /* Green similar to Spotify */
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #1ed760; /* Darker green */
+    }
+
+    input[type="range"] {
+        width: 100%;
+    }
+
+    .music-block {
+        width: calc(33.33% - 20px);
+        margin-bottom: 20px;
         position: relative;
     }
-    #right-corner input[type="file"] {
-        position: absolute;
-        top: 0;
-        right: 0;
-        opacity: 0;
+
+    .music-block img {
+        width: 100%;
+        border-radius: 10px;
     }
-    #right-corner label {
-        background-color: #4caf50; /* Green */
+
+    .play-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: #fff;
+        border: none;
+        padding: 10px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        display: none;
+    }
+
+    .music-block:hover .play-btn {
+        display: block;
+    }
+
+    .play-btn:hover {
+        background-color: #1ed760; /* Darker green */
+    }
+
+    #music-info {
+        color: #fff;
+        font-size: 16px;
+        margin-top: 10px;
+    }
+
+    @media screen and (max-width: 768px) {
+        .music-block {
+            width: calc(50% - 20px);
+        }
+    }
+
+    #choose-music {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: #1db954;
         color: #fff;
         padding: 10px 20px;
         border-radius: 5px;
         cursor: pointer;
+        transition: background-color 0.3s ease;
+        z-index: 999;
     }
-    #right-corner label:hover {
-        background-color: #45a049; /* Darker green */
+
+    #choose-music:hover {
+        background-color: #1ed760; /* Darker green */
     }
-    #github-logo {
-        position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        cursor: pointer;
+
+    .music-column {
+        display: flex;
+        justify-content: space-between;
     }
+
+    #no-music {
+        color: #fff;
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
 </style>
 </head>
 <body>
 <div id="container">
     <div id="left-corner">
-        <p>Abdul Rauf</p>
-        <!-- You can replace the image URL below with your own image -->
         <img src="IMG_0406.JPG" alt="Abdul Rauf's Picture">
     </div>
     <div id="player">
         <h1>Rr mini music player 🎵</h1>
         <audio id="audioPlayer" controls></audio>
-        <button id="playBtn">Play</button>
-        <button id="pauseBtn">Pause</button>
-        <input type="range" id="volumeRange" min="0" max="1" step="0.01" value="1">
-    </div>
+   
     <div id="right-corner">
         <input type="file" id="fileInput" accept="audio/*">
-        <label for="fileInput">Choose Music</label>
+        <label for="fileInput" id="choose-music">Choose Music</label>
+    </div>
+    <h2 id="no-music">In case you don't have any music on your PC 🤨</h2>
+    <!-- Added blocks -->
+    <div class="music-column">
+        <div class="music-block">
+            <img src="lego house.jpg" alt="Song 1">
+            <button class="play-btn" onclick="playSong('tomp3.cc - Ed Sheeran  Lego House Official Music Video_320kbps.mp3')">▶</button>
+        </div>
+        <div class="music-block">
+            <img src="Photograph_cover.png" alt="Song 2">
+            <button class="play-btn" onclick="playSong('tomp3.cc - PhotographEd Sheeran Audio_320kbps.mp3')">▶</button>
+        </div>
+        <div class="music-block">
+            <img src="let me.jpeg" alt="Song 3">
+            <button class="play-btn" onclick="playSong('tomp3.cc - DJ Snake  Let Me Love You ft Justin Bieber_320kbps.mp3')">▶</button>
+        </div>
+    </div>
+    <div class="music-column">
+        <div class="music-block">
+            <img src="blinding lights.png" alt="Song 4">
+            <button class="play-btn" onclick="playSong('tomp3.cc - The Weeknd  Blinding Lights Official Audio_320kbps (1).mp3')">▶</button>
+        </div>
+        <div class="music-block">
+            <img src="never say never.jpg" alt="Song 5">
+            <button class="play-btn" onclick="playSong('never.mp3')">▶</button>
+        </div>
+        <div class="music-block">
+            <img src="alone.jpeg" alt="Song 6">
+            <button class="play-btn" onclick="playSong('tomp3.cc - Alan Walker  Alone_320kbps.mp3')">▶</button>
+        </div>
     </div>
 </div>
 
-<!-- You can replace the image URL below with your own GitHub logo -->
-<a href="https://github.com/Raufjatoi/Rr-mini-player-" target="_blank" id="github-logo">
-    <img src="github.png" alt="GitHub Logo">
-</a>
-
+<!-- GitHub button -->
+<button id="github-button">GitHub</button>
 
 <script>
     const audioPlayer = document.getElementById('audioPlayer');
-    const playBtn = document.getElementById('playBtn');
-    const pauseBtn = document.getElementById('pauseBtn');
-    const volumeRange = document.getElementById('volumeRange');
-    const fileInput = document.getElementById('fileInput');
 
-    playBtn.addEventListener('click', () => {
+    function playSong(songSrc) {
+        audioPlayer.src = songSrc;
         audioPlayer.play();
-    });
-
-    pauseBtn.addEventListener('click', () => {
-        audioPlayer.pause();
-    });
-
-    volumeRange.addEventListener('input', () => {
-        audioPlayer.volume = volumeRange.value;
-    });
-
-    fileInput.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        const url = URL.createObjectURL(file);
-        audioPlayer.src = url;
-    });
+    }
 </script>
+
 </body>
 </html>
